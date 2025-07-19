@@ -38,7 +38,7 @@ runs:
   using: "composite"
   steps:
     - run: |
-        chmod +x ${{ github.action_path }}/entrypoint.sh
+        chmod +x ${{ github.action_path }}/src/entrypoint.sh
         ${{ github.action_path }}/src/entrypoint.sh
       shell: bash
       env:
