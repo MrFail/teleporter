@@ -1,0 +1,32 @@
+name: "Rsync Over SSH with Env Key"
+description: "Sync files over SSH using a private key from an environment variable"
+inputs:
+  host:
+    description: "Remote server hostname"
+    required: true
+  user:
+    description: "SSH user"
+    required: true
+  path:
+    description: "Remote path on the server"
+    required: true
+  source:
+    description: "Local source directory"
+    required: false
+    default: "./dist"
+  key:
+    description: "Private SSH key"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        chmod +x "${{ github.action_path }}/entrypoint.sh"
+        "${{ github.action_path }}/entrypoint.sh" \
+          "${{ inputs.host }}" \
+          "${{ inputs.user }}" \
+          "${{ inputs.path }}" \
+          "${{ inputs.source }}" \
+          "${{ inputs.key }}"
