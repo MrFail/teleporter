@@ -1,0 +1,36 @@
+name: "Deploy via rsync"
+description: "Deploy public files to remote via rsync"
+inputs:
+  ssh_key:
+    description: "Private SSH key"
+    required: true
+  remote_user:
+    description: "SSH username"
+    required: true
+  remote_host:
+    description: "SSH host"
+    required: true
+  remote_path:
+    description: "Remote destination path"
+    required: true
+  exclude:
+    description: "Comma-separated list of paths to exclude"
+    required: false
+  include:
+    description: "Comma-separated list of paths to include"
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        chmod +x ${{ github.action_path }}/entrypoint.sh
+        ${{ github.action_path }}/src/entrypoint.sh
+      shell: bash
+      env:
+        SSH_KEY: ${{ inputs.ssh_key }}
+        REMOTE_USER: ${{ inputs.remote_user }}
+        REMOTE_HOST: ${{ inputs.remote_host }}
+        REMOTE_PATH: ${{ inputs.remote_path }}
+        EXCLUDES: ${{ inputs.exclude }}
+        INCLUDES: ${{ inputs.include }}
