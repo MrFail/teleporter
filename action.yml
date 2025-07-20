@@ -44,7 +44,7 @@ runs:
       env:
         REMOTE_HOST: ${{ inputs.host }}
         REMOTE_PORT: ${{ inputs.port }}
-        REMOTE_USER: ${{ inputs.user }}
+        REMOTE_USER: ${{ inputs.username }}
         SSH_KEY: ${{ inputs.key }}
         REMOTE_PATH: ${{ inputs.destination }}
         LOCAL_PATH: ${{ inputs.source }}
