@@ -17,9 +17,6 @@ inputs:
   username:
     description: "SSH username"
     required: true
-  key:
-    description: "Private SSH key"
-    required: true
   source:
     description: "Remote destination path"
     default: ./dist
@@ -27,12 +24,6 @@ inputs:
   destination:
     description: "Remote destination path"
     required: true
-  exclude:
-    description: "Comma-separated list of paths to exclude"
-    required: false
-  include:
-    description: "Comma-separated list of paths to include"
-    required: false
 
 runs:
   using: "composite"
@@ -42,11 +33,9 @@ runs:
         ${{ github.action_path }}/src/entrypoint.sh
       shell: bash
       env:
-        REMOTE_HOST: ${{ inputs.host }}
-        REMOTE_PORT: ${{ inputs.port }}
-        REMOTE_USER: ${{ inputs.username }}
-        SSH_KEY: ${{ inputs.key }}
+        SSH_HOST: ${{ inputs.host }}
+        SSH_PORT: ${{ inputs.port }}
+        SSH_USER: ${{ inputs.username }}
+        SSH_PASSWORD: ${{ inputs.ssh_password }}
         REMOTE_PATH: ${{ inputs.destination }}
         LOCAL_PATH: ${{ inputs.source }}
-        EXCLUDES: ${{ inputs.exclude }}
-        INCLUDES: ${{ inputs.include }}
