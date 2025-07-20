@@ -10,13 +10,16 @@ inputs:
   host:
     description: "SSH host"
     required: true
+  password:
+    description: "SSH password"
+    required: true
+  username:
+    description: "SSH username"
+    required: true
   port:
     description: "SSH port"
     required: false
     default: "22"
-  username:
-    description: "SSH username"
-    required: true
   source:
     description: "Remote destination path"
     default: ./dist
@@ -36,6 +39,6 @@ runs:
         SSH_HOST: ${{ inputs.host }}
         SSH_PORT: ${{ inputs.port }}
         SSH_USER: ${{ inputs.username }}
-        SSH_PASSWORD: ${{ inputs.ssh_password }}
+        SSH_PASSWORD: ${{ inputs.password }}
         REMOTE_PATH: ${{ inputs.destination }}
         LOCAL_PATH: ${{ inputs.source }}
