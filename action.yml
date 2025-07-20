@@ -1,5 +1,5 @@
-name: "Deploy via rsync"
-description: "Deploy public files to remote via rsync"
+name: "Copy files via rsync"
+description: "Copy files to remote via rsync"
 author: "Alexandru Gojinetchi alexandrugojinetchi@gmail.com"
 
 branding:
