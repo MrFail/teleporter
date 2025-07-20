@@ -16,8 +16,8 @@ fi
 
 # Prepare SSH key
 mkdir -p ~/.ssh
-echo "$SSH_KEY" > ~/.ssh/id_rsa
-chmod 600 ~/.ssh/id_rsa
+echo "$SSH_KEY" > ~/.ssh/temp
+chmod 600 ~/.ssh/temp
 
 # Add host to known_hosts to prevent ssh prompt
 ssh-keyscan -H "$REMOTE_HOST" >> ~/.ssh/known_hosts
@@ -53,7 +53,7 @@ if [[ -n "$EXCLUDES" ]]; then
 fi
 
 # Run rsync and capture exit code
-if eval rsync -avz --delete $RSYNC_FILTERS "$SOURCE_PATH" "$REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH"; then
+if eval rsync -avz --delete -e "ssh -i ~/.ssh/temp -o StrictHostKeyChecking=no" $RSYNC_FILTERS "$SOURCE_PATH" "$REMOTE_USER@$REMOTE_HOST:$REMOTE_PATH"; then
   echo "✅ Deployment finished successfully."
 else
   status=$?
