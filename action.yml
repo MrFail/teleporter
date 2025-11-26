@@ -10,14 +10,11 @@ inputs:
   host:
     description: "SSH host"
     required: true
-  password:
-    description: "SSH password"
-    required: true
-  private_key:
-    description: "SSH private key"
-    required: true
   username:
     description: "SSH username"
+    required: true
+  key:
+    description: "SSH private key"
     required: true
   port:
     description: "SSH port"
@@ -30,7 +27,6 @@ inputs:
   destination:
     description: "Remote destination path"
     required: true
-
 runs:
   using: "composite"
   steps:

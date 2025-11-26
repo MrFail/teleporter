@@ -17,13 +17,11 @@ A GitHub Action to upload files from your workflow to a remote server using `rsy
 | Name          | Required | Description                                                                    |
 |---------------|----------|--------------------------------------------------------------------------------|
 | `host`        | ✅        | SSH hostname or IP address of the remote server                                |
-| `port`        | ✅        | SSH Port of the remote server                                                  |
 | `username`    | ✅        | Username for SSH login                                                         |
 | `key`         | ✅        | The SSH private key (usually passed from a secret)                             |
+| `port`        | ✅        | SSH Port of the remote server                                                  |
 | `source`      | ✅        | Local directory to copy (default: `./dist`)                                    |
 | `destination` | ✅        | Target path on the remote server                                               |
-| `exclude`     | ✅        | Comma- or newline-separated list of paths to exclude from the upload           |
-| `include`     | ✅        | Comma- or newline-separated list of paths to force include (overrides exclude) |
 
 ---
 
