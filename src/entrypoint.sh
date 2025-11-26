@@ -1,13 +1,25 @@
 #!/bin/bash
 set -e
 
-sshpass -p "$SSH_PASSWORD" ssh -p "$SSH_PORT" -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "rm -r '$REMOTE_PATH'"
+# Write the private key to a temp file
+KEY_FILE=$(mktemp)
+echo "$SSH_PRIVATE_KEY" > "$KEY_FILE"
+chmod 600 "$KEY_FILE"
 
-# Run rsync and capture exit code
-if sshpass -p "$SSH_PASSWORD" scp -r -P "$SSH_PORT" -o StrictHostKeyChecking=no "$LOCAL_PATH" "$SSH_USER@$SSH_HOST:$REMOTE_PATH"; then
+# Remove remote directory
+ssh -i "$KEY_FILE" -p "$SSH_PORT" -o StrictHostKeyChecking=no \
+  "$SSH_USER@$SSH_HOST" \
+  "rm -rf '$REMOTE_PATH'"
+
+# Copy files using scp
+if scp -i "$KEY_FILE" -P "$SSH_PORT" -o StrictHostKeyChecking=no \
+    -r "$LOCAL_PATH" "$SSH_USER@$SSH_HOST:$REMOTE_PATH"; then
   echo "✅ Deployment finished successfully."
 else
   status=$?
-  echo "::error ::Rsync failed with exit code $status"
+  echo "::error ::SCP failed with exit code $status"
   exit $status
 fi
+
+# Cleanup private key (security)
+rm -f "$KEY_FILE"
