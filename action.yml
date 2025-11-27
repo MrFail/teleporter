@@ -38,7 +38,7 @@ runs:
         SSH_HOST: ${{ inputs.host }}
         SSH_PORT: ${{ inputs.port }}
         SSH_USER: ${{ inputs.username }}
-        SSH_PRIVATE_KEY: ${{ inputs.private_key }}
+        SSH_PRIVATE_KEY: ${{ inputs.key }}
         SSH_PASSWORD: ${{ inputs.password }}
         REMOTE_PATH: ${{ inputs.destination }}
         LOCAL_PATH: ${{ inputs.source }}
