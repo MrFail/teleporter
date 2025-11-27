@@ -1,14 +1,34 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
+# Where to store the SSH key
+KEY_FILE="$HOME/ssh_key.pem"
+
+# Write the private key to the file
+printf "%b" "$SSH_PRIVATE_KEY" > "$KEY_FILE"
+chmod 600 "$KEY_FILE"
+
 # Remove remote directory
-ssh -i <(printf "%b" "$SSH_PRIVATE_KEY") -p "$SSH_PORT" -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "rm -rf '$REMOTE_PATH'"
+ssh \
+  -i "$KEY_FILE" \
+  -p "$SSH_PORT" \
+  -o StrictHostKeyChecking=no \
+  "$SSH_USER@$SSH_HOST" \
+  "rm -rf '$REMOTE_PATH'"
 
 # Copy files using scp
-if scp -i <(printf "%b" "$SSH_PRIVATE_KEY") -P "$SSH_PORT" -o StrictHostKeyChecking=no -r "$LOCAL_PATH" "$SSH_USER@$SSH_HOST:$REMOTE_PATH"; then
+if scp \
+    -i "$KEY_FILE" \
+    -P "$SSH_PORT" \
+    -o StrictHostKeyChecking=no \
+    -r "$LOCAL_PATH" "$SSH_USER@$SSH_HOST:$REMOTE_PATH"; then
   echo "✅ Deployment finished successfully."
 else
   status=$?
   echo "::error ::SCP failed with exit code $status"
+  rm -f "$KEY_FILE"
   exit $status
 fi
+
+# Cleanup private key
+rm -f "$KEY_FILE"
