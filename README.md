@@ -43,7 +43,5 @@ jobs:
           key: ${{ secrets.REMOTE_SSH_KEY }}
           source: "./dist"
           destination: "/var/www/html/"
-          exclude: "file.txt,dir"
-          include: "file.txt,dir"
 ```
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

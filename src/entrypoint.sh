@@ -3,7 +3,7 @@ set -e
 
 # Write the private key to a temp file
 KEY_FILE=$(mktemp)
-echo "$SSH_PRIVATE_KEY" > "$KEY_FILE"
+echo -e "$SSH_PRIVATE_KEY" > "$KEY_FILE"
 chmod 600 "$KEY_FILE"
 
 # Remove remote directory
