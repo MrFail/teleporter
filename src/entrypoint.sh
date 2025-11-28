@@ -8,13 +8,13 @@ KEY_FILE="$HOME/ssh_key.pem"
 printf "%b" "$SSH_PRIVATE_KEY" > "$KEY_FILE"
 chmod 600 "$KEY_FILE"
 
-# Remove remote directory
+# Create remote directory ONLY if it does not exist
 ssh \
   -i "$KEY_FILE" \
   -p "$SSH_PORT" \
   -o StrictHostKeyChecking=no \
   "$SSH_USER@$SSH_HOST" \
-  "rm -rf '$REMOTE_PATH'"
+  "[ -d \"$REMOTE_PATH\" ] || mkdir \"$REMOTE_PATH\""
 
 # Copy files using scp
 if scp \
