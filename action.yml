@@ -1,5 +1,5 @@
-name: "Copy files via rsync"
-description: "Copy files to remote via rsync"
+name: "Teleporter - rsync over SSH"
+description: "Sync a local directory to a remote server with rsync over SSH, using a private key from a secret"
 author: "Alexandru Gojinetchi alexandrugojinetchi@gmail.com"
 
 branding:
@@ -8,37 +8,61 @@ branding:
 
 inputs:
   host:
-    description: "SSH host"
-    required: true
-  username:
-    description: "SSH username"
-    required: true
-  key:
-    description: "SSH private key"
+    description: "SSH host name or IP address"
     required: true
   port:
     description: "SSH port"
     required: false
     default: "22"
-  source:
-    description: "Remote destination path"
-    default: ./dist
-    required: false
-  destination:
-    description: "Remote destination path"
+  username:
+    description: "SSH user name"
     required: true
+  key:
+    description: "SSH private key (pass it from a secret)"
+    required: true
+  known_hosts:
+    description: "known_hosts line(s) of the server (`ssh-keyscan -p <port> <host>`). Recommended; when empty the host key is scanned at run time and trusted on first use"
+    required: false
+    default: ""
+  source:
+    description: "Local directory whose CONTENTS are synced into `destination`"
+    required: false
+    default: "./dist"
+  destination:
+    description: "Remote target directory (created with its parents if missing). Absolute, or relative to the user's home"
+    required: true
+  delete:
+    description: "true = mirror: delete remote files that are not in `source` (excluded files are kept)"
+    required: false
+    default: "false"
+  exclude:
+    description: "rsync patterns to skip, separated by spaces or new lines (e.g. `.git node_modules *.log`)"
+    required: false
+    default: ""
+  include:
+    description: "rsync patterns that are always synced even if an `exclude` pattern matches them, separated by spaces or new lines"
+    required: false
+    default: ""
+  args:
+    description: "Extra rsync arguments, separated by spaces (e.g. `--chmod=D755,F644 --dry-run`)"
+    required: false
+    default: ""
+
 runs:
   using: "composite"
   steps:
-    - run: |
-        chmod +x ${{ github.action_path }}/src/entrypoint.sh
-        ${{ github.action_path }}/src/entrypoint.sh
+    - name: Sync files with rsync
       shell: bash
+      run: bash "$GITHUB_ACTION_PATH/src/entrypoint.sh"
       env:
         SSH_HOST: ${{ inputs.host }}
         SSH_PORT: ${{ inputs.port }}
         SSH_USER: ${{ inputs.username }}
         SSH_PRIVATE_KEY: ${{ inputs.key }}
-        SSH_PASSWORD: ${{ inputs.password }}
-        REMOTE_PATH: ${{ inputs.destination }}
+        SSH_KNOWN_HOSTS: ${{ inputs.known_hosts }}
         LOCAL_PATH: ${{ inputs.source }}
+        REMOTE_PATH: ${{ inputs.destination }}
+        RSYNC_DELETE: ${{ inputs.delete }}
+        RSYNC_EXCLUDE: ${{ inputs.exclude }}
+        RSYNC_INCLUDE: ${{ inputs.include }}
+        RSYNC_ARGS: ${{ inputs.args }}
